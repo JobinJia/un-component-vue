@@ -1,9 +1,4 @@
 {
-  "references": [
-    {
-      "path": "../tsconfig/dom.json"
-    }
-  ],
   "extends": "tsconfig/node.json",
   "include": [
     "."
