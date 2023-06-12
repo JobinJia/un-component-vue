@@ -1,14 +1,10 @@
-import * as React from "react";
+<script lang="ts" setup>
+  defineOptions({
+    name: `${{{ pascalCase name }} }`
+  })
+  const props = defineProps()
+</script>
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-export const {{ pascalCase name }} = ({ children }: Props) => {
-  return (
-    <div>
-      <h1>{{ name }}</h1>
-      {children}
-    </div>
-  );
-};
+<template>
+  <div>{{ pascalCase name }}</div>
+</template>

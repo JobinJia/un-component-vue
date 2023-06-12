@@ -1,20 +1,13 @@
 {
-  "name": "ui",
+  "name": "@un-component-vue/ui",
   "version": "0.0.0",
-  "main": "./index.tsx",
-  "types": "./index.tsx",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\"",
-    "generate:component": "turbo gen react-component"
+    "generate:component": "turbo gen vue-component",
+    "build": "rimraf dist && vite build"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "workspace:*",
-    "react": "^17.0.2",
-    "tsconfig": "workspace:*",
-    "typescript": "^4.5.2"
+    "@un-component-vue/shard": "workspace:*",
+    "tsconfig": "workspace:*"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "@un-component-vue/shard",
+  "version": "1.0.0",
+  "author": "JobinJia",
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build": "rimraf dist && vite build"
+  }
+}
