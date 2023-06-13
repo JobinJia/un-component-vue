@@ -1,7 +1,7 @@
 {
   "extends": "tsconfig/dom.json",
   "include": [
-    "*/**"
+    "*/*"
   ],
   "exclude": [
     "dist",
