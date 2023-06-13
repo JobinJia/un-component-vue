@@ -12,7 +12,8 @@
     "dev:play": "pnpm --filter @un-component-vue/playground dev",
     "build:ui": "pnpm --filter @un-component-vue/ui build",
     "build:shard": "pnpm --filter @un-component-vue/shard build",
-    "build:all": "pnpm run build:shard && npm run build:ui"
+    "build:all": "pnpm run build:shard && npm run build:ui",
+    "build:play": "pnpm --filter @un-component-vue/playground build"
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
