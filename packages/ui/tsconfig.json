@@ -1,16 +1,17 @@
 {
-  "references": [
-    {
-      "path": "../tsconfig/dom.json"
-    }
-  ],
-  "extends": "tsconfig/node.json",
+  "extends": "tsconfig/dom.json",
   "include": [
-    "."
+    "*/**"
   ],
   "exclude": [
     "dist",
     "build",
     "node_modules"
-  ]
+  ],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "composite": true,
+    "baseUrl": ".",
+    "moduleResolution": "node"
+  }
 }

@@ -1,38 +1,24 @@
-import { type PropType, type VNode, unref, useModel } from 'vue'
+import { type ComputedOptions, type ConcreteComponent, type MethodOptions, unref, useModel } from 'vue'
 import { type Recordable, isFunction } from '@un-component-vue/shard'
 
 import { defineComponent, h, resolveComponent } from 'vue'
 import { set } from 'lodash-es'
 import { COM_SLOTS_PREFIX } from './constans'
-import type { FormSchema } from './typing'
+import type { FormContentComponentPropsKeys, FormGroupPropsKeys, FormItemPropsKeys, FormSchema } from './typing'
 
-export default defineComponent({
-  name: 'FormContentItem',
-  props: {
-    formItem: {
-      type: [Object, String] as PropType<string>,
-      required: true,
-    },
-    schema: {
-      type: Object as unknown as PropType<FormSchema>,
-      required: true,
-    },
-    model: {
-      type: Object as PropType<Recordable>,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
+export default defineComponent(
+  <C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
+    F extends FormItemPropsKeys = FormItemPropsKeys,
+    G extends FormGroupPropsKeys = FormGroupPropsKeys>(props: { formItem: string; schema: FormSchema<C, F, G>; model: Recordable }, ctx: any) => {
     const vModel = useModel(props, 'model')
 
-    const getCustomComponentSlot = (schema: FormSchema) => {
+    const getCustomComponentSlot = (schema: FormSchema<C, F, G>) => {
       const { key } = schema
       const slotKey = `${COM_SLOTS_PREFIX}${key}`
-      const currentSlot = ctx.slots?.[slotKey]
-      return currentSlot
+      return ctx.slots?.[slotKey]
     }
 
-    function renderComponent(schema: FormSchema) {
+    function renderComponent(schema: FormSchema<C, F, G>) {
       const { key, component, componentProps = {}, modelKey = 'value', nested = true, field, componentSlots = {} } = schema
       if (!component) {
         const customSlot = getCustomComponentSlot(schema)
@@ -58,11 +44,9 @@ export default defineComponent({
           },
         }
       }
-      if (isFunction(component)) {
-        const r: () => VNode | VNode[] | Element = component
-        return r()
-      }
-      const Content = resolveComponent(component) as Element
+      if (isFunction(component))
+        return component()
+      const Content = resolveComponent(component as string) as ConcreteComponent<{}, any, any, ComputedOptions, MethodOptions>
       return h(
         Content,
         {
@@ -72,7 +56,7 @@ export default defineComponent({
         componentSlots,
       )
     }
-    function rednerFormItem({ schema }: { schema: FormSchema }) {
+    function renderFormItem({ schema }: { schema: FormSchema<C, F, G> }) {
       const { formItemProps = {}, formItemSlots = {} } = schema
       const fProps = isFunction(formItemProps) ? formItemProps() : formItemProps
       const FormItem = resolveComponent(props.formItem) as string
@@ -88,10 +72,14 @@ export default defineComponent({
 
     function renderContent() {
       const schema = props.schema
-      return rednerFormItem({ schema })
+      return renderFormItem({ schema })
     }
     return () => {
       return renderContent()
     }
   },
-})
+  {
+    name: 'FormItem',
+    props: ['formItem', 'schema', 'model'],
+  },
+)

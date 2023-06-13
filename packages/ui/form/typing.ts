@@ -5,9 +5,15 @@ export interface CustomSlotsType {
   [K: string]: () => Element | VNode | VNode[] | Component | string
 }
 
-export interface FormContentComponentProps { }
-export interface FormItemProps { }
-export interface FormGroupProps { }
+export interface FormContentComponentProps {
+  [Component: string]: unknown
+}
+export interface FormItemProps {
+  [FormItemName: string]: unknown
+}
+export interface FormGroupProps {
+  [GroupName: string]: unknown
+}
 
 export type FormContentComponentPropsKeys = keyof FormContentComponentProps
 export type FormItemPropsKeys = keyof FormItemProps

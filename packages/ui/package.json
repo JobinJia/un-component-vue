@@ -9,5 +9,9 @@
   "devDependencies": {
     "@un-component-vue/shard": "workspace:*",
     "tsconfig": "workspace:*"
+  },
+  "peerDependencies": {
+    "lodash-es": "^4.17.21",
+    "vue": "^3.3.4"
   }
 }

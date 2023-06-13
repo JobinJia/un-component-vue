@@ -1,28 +1,23 @@
-import { type Component, type PropType, type VNode, h, resolveComponent, unref, useModel } from 'vue'
+import { defineComponent, h, resolveComponent, unref, useModel } from 'vue'
 import { type Recordable, isFunction } from '@un-component-vue/shard'
 
-import { defineComponent } from 'vue'
-import type { ColSlotKey, FormSchema, FormSchemas } from './typing'
+import type {
+  ColSlotKey,
+  FormContentComponentPropsKeys,
+  FormGroupPropsKeys,
+  FormItemPropsKeys,
+  FormSchema,
+  FormSchemas,
+  GroupSlotsType,
+} from './typing'
 import { COM_SLOTS_PREFIX } from './constans'
 import FormItem from './FormItem'
 
-export default defineComponent({
-  name: 'FormContent',
-  components: {
-    FormItem,
-  },
-  props: {
-    formItem: {
-      type: [Object, String] as PropType<string>,
-    },
-    schemas: {
-      type: Object as PropType<FormSchemas>,
-    },
-    modelValue: {
-      type: Object as PropType<Recordable>,
-    },
-  },
-  setup: (props, ctx) => {
+export default defineComponent(
+  <C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
+    F extends FormItemPropsKeys = FormItemPropsKeys,
+    G extends FormGroupPropsKeys = FormGroupPropsKeys,
+  >(props: { formItem: string; schemas: FormSchemas<C, F, G>; modelValue: Recordable }, ctx: any) => {
     const model = useModel(props, 'modelValue')
     const getCustomContentSlots = () => {
       const slots = ctx.slots ?? {}
@@ -34,7 +29,7 @@ export default defineComponent({
       return contentSlots
     }
 
-    const renderItem = (s: FormSchema) => {
+    const renderItem = (s: FormSchema<C, F, G>) => {
       const { key } = s
       const FormContentItem = resolveComponent('FormItem') as string
       return h(FormContentItem, {
@@ -45,11 +40,11 @@ export default defineComponent({
       }, getCustomContentSlots())
     }
 
-    const renderChildren = (s: FormSchema) => {
+    const renderChildren = (s: FormSchema<C, F, G>) => {
       const { children = [] } = s
       if (children.length > 0) {
         const ThisComp = resolveComponent('FormContent')
-        const r = h(ThisComp, {
+        return h(ThisComp, {
           'schemas': children,
           'formItem': props.formItem,
           'modelValue': props.modelValue,
@@ -57,26 +52,25 @@ export default defineComponent({
             model.value = m
           },
         })
-        return r
       }
       return renderItem(s)
     }
 
-    const renderGroupSlots = (s: FormSchema) => {
-      const { key, groupSlots = {} } = s
+    const renderGroupSlots = (s: FormSchema<C, F, G>) => {
+      const { key, groupSlots = {} as GroupSlotsType } = s
       const prefixSlotKey: ColSlotKey = `col:${key}:prefix`
       const suffixSlotKey: ColSlotKey = `col:${key}:suffix`
-      const prefix: (() => Element | VNode | VNode[] | string) | null = groupSlots?.[prefixSlotKey] ?? ctx.slots?.[prefixSlotKey] ?? null
-      const suffix: (() => Element | VNode | VNode[] | string) | null = groupSlots?.[suffixSlotKey] ?? ctx.slots?.[suffixSlotKey] ?? null
-      const slotArrary: unknown[] = []
+      const prefix = groupSlots?.[prefixSlotKey] ?? ctx.slots?.[prefixSlotKey] ?? null
+      const suffix = groupSlots?.[suffixSlotKey] ?? ctx.slots?.[suffixSlotKey] ?? null
+      const slotArray: unknown[] = []
       if (prefix)
-        slotArrary.unshift(prefix())
+        slotArray.unshift(prefix())
 
-      slotArrary.push(renderChildren(s))
+      slotArray.push(renderChildren(s))
       if (suffix)
-        slotArrary.push(suffix())
+        slotArray.push(suffix())
 
-      return () => slotArrary
+      return () => slotArray
     }
 
     const renderContent = () => {
@@ -84,15 +78,14 @@ export default defineComponent({
       return schemas.map((s) => {
         const { key, component, render, group, groupProps = {} } = s
         if (!component) {
-          if (render && isFunction(render)) {
-            const r: () => VNode | VNode[] | Element | Component = render
-            return r()
-          }
+          if (render && isFunction(render))
+            return render()
+
           if (ctx.slots?.[key])
             return ctx.slots[key]?.()
         }
         if (group) {
-          const GroupComp = resolveComponent(group)
+          const GroupComp = resolveComponent(group as string)
           return h(GroupComp, groupProps, renderGroupSlots(s))
         } else {
           return renderItem(s)
@@ -104,4 +97,11 @@ export default defineComponent({
       return renderContent()
     }
   },
-})
+  {
+    name: 'FormContent',
+    components: {
+      FormItem,
+    },
+    props: ['formItem', 'schemas', 'modelValue'],
+  } as any,
+)

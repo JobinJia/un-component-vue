@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});function e(t){return Object.prototype.toString.call(t)}function n(t){return e(t)==="[object Number]"}function o(t){return e(t)==="[object Function]"}exports.isFunction=o;exports.isNumber=n;
