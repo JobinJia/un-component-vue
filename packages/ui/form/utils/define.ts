@@ -2,8 +2,8 @@ import type { FormContentComponentPropsKeys, FormGroupPropsKeys, FormItemPropsKe
 
 export function defineFormSchema<
   C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
-  F extends FormItemPropsKeys = FormItemPropsKeys,
   G extends FormGroupPropsKeys = FormGroupPropsKeys,
+  F extends FormItemPropsKeys = FormItemPropsKeys,
 >(schema: FormSchema<C, F, G>) {
   return schema
 }

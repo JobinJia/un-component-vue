@@ -1,5 +1,5 @@
 // import type { FormContentComponentProps, FormItemProps, FormGroupProps } from '@un-component-vue/ui'
-import type { FormContentComponentProps, FormItemProps, FormGroupProps } from '@un-component-vue/ui/form/typing'
+// import type { FormContentComponentProps, FormItemProps, FormGroupProps } from '@un-component-vue/ui/form/typing'
 import type {
   InputProps as NInputProps,
   InputNumberProps as NInputNumberProps,
@@ -30,20 +30,20 @@ import type {
   TdFormItemProps
 } from 'tdesign-vue-next'
 
-declare module '@un-component-vue/ui' {
+declare module '@un-component-vue/ui/form/typing' {
   interface FormItemProps {
-    'n-form-item': NFormItemProps,
-    'n-form-item-gi': NFromItemGiProps,
-    'a-form-item': AFormItemProps,
+    'n-form-item': NFormItemProps
+    'n-form-item-gi': NFromItemGiProps
+    'a-form-item': AFormItemProps
     't-form-item': TdFormItemProps
   }
   interface FormGroupProps {
-    'a-row': ARowProps,
-    'a-col': AColProps,
-    'n-row': NRowProps,
-    'n-col': NColProps,
-    'n-grid': NGridProps,
-    'n-grid-item': NGridItemProps,
+    'a-row': ARowProps
+    'a-col': AColProps
+    'n-row': NRowProps
+    'n-col': NColProps
+    'n-grid': NGridProps
+    'n-grid-item': NGridItemProps
     'n-gi': NGridItemProps
   }
   interface FormContentComponentProps {

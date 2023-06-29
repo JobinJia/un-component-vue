@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { h, ref, unref } from 'vue'
-import { UnFormContent, defineFormSchema, useFormSchemas } from '@un-component-vue/ui'
+import { UnFormContent, useFormSchemas } from '@un-component-vue/ui'
 
 const model = ref({
   a: 'abcd',
@@ -15,7 +15,7 @@ const model = ref({
 })
 
 const schemasNaive = [
-  defineFormSchema({
+  {
     key: 'a',
     field: 'a',
     component: 'n-input',
@@ -35,8 +35,8 @@ const schemasNaive = [
       prefix: () => <div>前缀</div>,
       suffix: () => '后缀',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'b',
     field: 'b',
     component: 'n-input-number',
@@ -50,11 +50,11 @@ const schemasNaive = [
       prefix: () => h('span', null, '给爷打钱: '),
       suffix: () => '百万元',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'c',
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'd',
     render: () => {
       return (
@@ -63,8 +63,8 @@ const schemasNaive = [
         </div>
       )
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'e',
     render: () => {
       if (unref(model).b >= 10)
@@ -72,8 +72,8 @@ const schemasNaive = [
 
       return h('h5', {}, '也太抠了吧, 10百万都不给??')
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'f',
     render: () => {
       const options = Array.from({ length: 30 }).map((_, i) => ({ label: `Option${i}`, value: i }))
@@ -83,8 +83,8 @@ const schemasNaive = [
         </n-form-item>
       )
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'addDirection',
     field: 'direction',
     component: 'n-switch',
@@ -95,16 +95,16 @@ const schemasNaive = [
       checked: () => '向后添加',
       unchecked: () => '向前添加',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'delKey',
     field: 'delKey',
     component: 'n-input',
     formItemProps: {
       label: 'Del key',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'button',
     formItemProps: {
     },
@@ -115,21 +115,21 @@ const schemasNaive = [
         </n-button>
       )
     },
-  }),
+  },
 ]
 
 const { schemasRef, addSchema, delSchema } = useFormSchemas(schemasNaive)
 let i = 1
 function addNaive() {
   const key = `dynamicGroup-${i}`
-  const item = defineFormSchema({
+  const item = {
     key,
     group: 'n-row',
     groupProps: {
       // gutter: 12,
     },
     children: [
-      defineFormSchema({
+      {
         key: `dynamic-${i}`,
         field: `dynamic${i}`,
         component: 'n-input',
@@ -155,9 +155,9 @@ function addNaive() {
             )
           },
         },
-      }),
+      },
     ],
-  })
+  }
 
   addSchema(item, { direction: model.value.direction })
   i++
@@ -168,7 +168,7 @@ function handleDel(key: string) {
 }
 
 const schemasAnt = [
-  defineFormSchema({
+  {
     key: 'b',
     field: 'b',
     formItemProps: {
@@ -176,8 +176,8 @@ const schemasAnt = [
     },
     component: 'a-input-number',
     componentProps: {},
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'a',
     field: 'a',
     component: 'a-input',
@@ -188,8 +188,8 @@ const schemasAnt = [
     formItemSlots: {
       extra: () => 'antd formitem extra slot',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'c',
     field: 'c',
     formItemProps: {
@@ -201,14 +201,14 @@ const schemasAnt = [
         <a-select options={options}></a-select>
       )
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'd',
     formItemProps: {
       label: 'Component:D',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'antDisable',
     field: 'antDisable',
     component: 'a-radio-group',
@@ -223,15 +223,15 @@ const schemasAnt = [
     formItemProps: {
       label: 'antDisable',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'e',
     group: 'a-row',
     groupProps: {
       gutter: 24,
     },
     children: Array.from({ length: 10 }).map((_, i) => (
-      defineFormSchema({
+      {
         key: `group.field-${i}`,
         field: `group.field-${i}`,
         component: 'a-input',
@@ -266,10 +266,11 @@ const schemasAnt = [
             alignItems: 'center',
           },
         },
-      })
-    )),
-  }),
-  defineFormSchema({
+      }
+    ),
+    ),
+  },
+  {
     key: 'group-col',
     group: 'a-col',
     field: 'aCol',
@@ -294,20 +295,20 @@ const schemasAnt = [
     formItemProps: {
       label: 'Acol Label',
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'ant-button',
     render: () => {
       return <a-button type="primary" onClick={handleAddAntGroup}>添加到组</a-button>
     },
-  }),
+  },
 ]
 
 const { schemasRef: schemasAntRef, addSchema: addSchemaAnt, delSchema: delSchemaAnt } = useFormSchemas(schemasAnt)
 let antK = 0
 function handleAddAntGroup() {
   const key = `dy-ant-${antK}`
-  const item = defineFormSchema({
+  const item = {
     key,
     field: key,
     component: 'a-input',
@@ -336,7 +337,7 @@ function handleAddAntGroup() {
         )
       },
     },
-  })
+  }
   const ck = antK === 0 ? 'group.field-4' : `dy-ant-${antK - 1}`
   addSchemaAnt(item, { direction: model.value.direction, groupKey: 'e', key: ck })
   antK++
@@ -383,7 +384,7 @@ function handleDelAnt(key: string) {
 // ]
 
 const schemasT = [
-  defineFormSchema({
+  {
     key: 'a',
     field: 'a',
     component: 't-input',
@@ -392,15 +393,15 @@ const schemasT = [
     },
     componentProps: {
     },
-  }),
-  defineFormSchema({
+  },
+  {
     key: 'b',
     field: 'b',
     component: 't-input-number',
     formItemProps: {
       label: 'T Number',
     },
-  }),
+  },
 ]
 </script>
 

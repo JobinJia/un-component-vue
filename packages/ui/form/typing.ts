@@ -6,20 +6,21 @@ export interface CustomSlotsType {
 }
 
 export interface FormContentComponentProps {
-  [Component: string]: unknown
 }
 export interface FormItemProps {
-  [FormItemName: string]: unknown
 }
 export interface FormGroupProps {
-  [GroupName: string]: unknown
 }
 
 export type FormContentComponentPropsKeys = keyof FormContentComponentProps
 export type FormItemPropsKeys = keyof FormItemProps
 export type FormGroupPropsKeys = keyof FormGroupProps
 
-interface SchemaItem<C extends FormContentComponentPropsKeys, F extends FormItemPropsKeys, G extends FormGroupPropsKeys> {
+export interface SchemaItem<
+  C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
+  G extends FormGroupPropsKeys = FormGroupPropsKeys,
+  F extends FormItemPropsKeys = FormItemPropsKeys,
+> {
   /**
    * unique key
    * if don't set component and render, it's template slot name
@@ -42,13 +43,13 @@ interface SchemaItem<C extends FormContentComponentPropsKeys, F extends FormItem
   /**
    * component props
    */
-  componentProps?: Functional<FormContentComponentProps[C] & { style?: Partial<CSSStyleDeclaration> }>
+  componentProps?: Functional<FormContentComponentProps[C]>
   /**
    * form-item component props
    */
-  formItemProps?: Functional<FormItemProps[F] & { style?: Partial<CSSStyleDeclaration> }>
+  formItemProps?: Functional<FormItemProps[F]>
   /**
-   * form-item slots conent, if set default slot, will repleace component
+   * form-item slots content, if set default slot, will replace component
    */
   formItemSlots?: SlotsType | CustomSlotsType
   /**
@@ -67,15 +68,15 @@ interface SchemaItem<C extends FormContentComponentPropsKeys, F extends FormItem
    */
   nested?: boolean
   /**
- * group row or col props
- */
+   * group row or col props
+   */
   group?: G
   /**
    * group props
    */
-  groupProps?: FormGroupProps[G] & { style?: Partial<CSSStyleDeclaration> }
+  groupProps?: Functional<FormGroupProps[G]> & { style?: Partial<CSSStyleDeclaration> }
   groupSlots?: GroupSlotsType
-  children?: FormSchemas<C, F, G>
+  children?: FormSchemas
 }
 export type ColSlotType = 'prefix' | 'suffix'
 export type ColSlotKey = `col:${string}:${ColSlotType}`
@@ -85,17 +86,17 @@ export type GroupSlotsType = Partial<{
 
 export type FormSchema<
   C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
-  F extends FormItemPropsKeys = FormItemPropsKeys,
   G extends FormGroupPropsKeys = FormGroupPropsKeys,
+  F extends FormItemPropsKeys = FormItemPropsKeys,
 > = {
-  [K in C]: SchemaItem<K, F, G>
-}[C]
+  [CK in C]: {
+    [GK in G]: {
+      [FK in F]: SchemaItem<CK, GK, FK>
+    }
+  }
+}[C][G][F]
 
-export type FormSchemas<
-  C extends FormContentComponentPropsKeys = FormContentComponentPropsKeys,
-  F extends FormItemPropsKeys = FormItemPropsKeys,
-  G extends FormGroupPropsKeys = FormGroupPropsKeys,
-> = FormSchema<C, F, G>[]
+export type FormSchemas = FormSchema[]
 
 // TODO: form-item slots type
 // TODO: component slots type
